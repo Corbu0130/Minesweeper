@@ -24,6 +24,11 @@ class Menu extends Component {
                 onSubmit={this.handleSubmit}
             >
                 <h1>Minesweeper</h1>
+                <h4>by <a 
+                    href="https://www.linkedin.com/in/john-michael-corbeta-2ba0361b4/"
+                    target="_blank"
+                >Corbu1997</a></h4>
+                <br/>
                 <form>
                     Row: <input
                         name="row"
