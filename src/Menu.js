@@ -27,7 +27,7 @@ class Menu extends Component {
                 <h4>by <a 
                     href="https://www.linkedin.com/in/john-michael-corbeta-2ba0361b4/"
                     target="_blank"
-                >Corbu1997</a></h4>
+                >Corbu0130</a></h4>
                 <br/>
                 <form>
                     Row: <input
