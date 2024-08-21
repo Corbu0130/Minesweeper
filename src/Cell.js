@@ -17,7 +17,6 @@ class Cell extends Component {
         let {status,value,gameover} = this.props
         let style = {}
         let text = null
-        // console.log(status)
         if (status==="open") {
             style.backgroundColor = "white"
             if (value<0) {
@@ -57,7 +56,6 @@ class Cell extends Component {
             status,posr,posc,
             openCell
         } = this.props
-        // console.log([posr,posc])
         if (status==="close") {
             openCell([[posr,posc]])
         }
@@ -75,9 +73,7 @@ class Cell extends Component {
             status,posr,posc,
             openCells
         } = this.props
-        // console.log([posr,posc])
         if (status==="open") {
-            // console.log("open cells")
             openCells(posr,posc)
         }
     }

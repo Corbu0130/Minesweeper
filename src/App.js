@@ -10,13 +10,13 @@ class App extends Component {
     ingame: false,
     row: 10,
     col: 10,
-    gameover: false
+    gameover: false,
   }
 
   constructor () {
     super()
-    let {row,col} = this.state
-    this.state.mines = Math.ceil(row*col*0.2)
+    let {row, col} = this.state
+    this.state.mines = Math.ceil(row * col  *0.2)
     this.state.cells = this.makecells(this.state)
     
     this.newgame = this.newgame.bind(this)
@@ -29,87 +29,78 @@ class App extends Component {
 
   render () {
     let {
-      ingame,gameover,row,col,mines,cells
+      ingame, gameover, row, col, mines, cells
     } = this.state
-    // console.log(cells)
     return (
       <div className="App">
         <Menu row={row} col={col} 
-          mines={mines} 
-          newgame={this.newgame}
-          reset={this.reset}
+          mines = {mines} 
+          newgame = {this.newgame}
+          reset = {this.reset}
         />
         <Board ingame={ingame} 
-          gameover={gameover}
-          row={row} col={col}
-          cells={cells} mines={mines}
-          openCell={this.openCell}
-          flagCell={this.flagCell}
-          openCells={this.openCells}
+          gameover = {gameover}
+          row = {row}
+          col={col}
+          cells = {cells}
+          mines={mines}
+          openCell = {this.openCell}
+          flagCell = {this.flagCell}
+          openCells = {this.openCells}
         />
       </div>
     );
   }
 
-  makecells ({row,col,mines}) {
+  makecells ({row, col, mines}) {
     let cells = []
 
-    let a = Array.from(
+    let randomArray = Array.from(
       {length: row*col}, 
       () => Math.random()
     )
-    let b = [...a].sort()[mines]
-    let c = a.map((val) => (val<b) ? 1:0)
-    // console.log(c)
+    let mineValue = [...randomArray].sort()[mines]
+    let binaryArray = randomArray.map((val) => (val < mineValue) ? 1:0)
 
-    let d = []
+    let binaryMatrix = []
     for (let i=0; i<row; i++) {
-        d.push(c.slice(i*col,(i+1)*col))
+        binaryMatrix.push(binaryArray.slice(i * col, (i+1) * col))
     }
-    // console.log(d)
 
-    let e = []
-    for (let i=0; i<row; i++) {
-        let f = [...d[i]]
-        for (let j=0; j<col; j++) {
-            f[j] = this.countmine(d,i,j)
+    let mineField = []
+    for (let i = 0; i < row; i++) { 
+        let mineFieldRow = [...binaryMatrix[i]]
+        for (let j = 0; j < col; j++) {
+          mineFieldRow[j] = this.countmine(binaryMatrix, i, j)
         }
-        e.push(f)
+        mineField.push(mineFieldRow)
     }
-    // console.log(e)
 
-    for (let i=0; i<row; i++) {
-      let arr = []
-      for (let j=0; j<col; j++) {
+    for (let i = 0; i < row; i++) {
+      let cellRow = []
+      for (let j = 0; j < col; j++) {
           let key = i*row+j+1
-          arr.push({
+          cellRow.push({
               key,
               status: "close",
-              value: e[i][j],
+              value: mineField[i][j],
               posr: i,
               posc: j
           })
       }
-      cells.push(arr)
+      cells.push(cellRow)
     }
-    // console.log(cells)
     return cells
   }
 
-  countmine (d,r,c) {
-    let row = d.length
-    let col = d[r].length
-    let mines = d[r][c]
-    if (mines===0) {
-      for (let i=r-1; i<r+2; i++) {
-        for (let j=c-1; j<c+2; j++) {
-          if (
-            (i>=0) && (j>=0) &&
-            (i<row) && (j<col) &&
-            !((i===r) && (j===c))
-          ) {
-            mines += d[i][j]
-          }
+  countmine (binaryMatrix, rIndex, cIndex) {
+    let row = binaryMatrix.length
+    let col = binaryMatrix[rIndex].length
+    let mines = binaryMatrix[rIndex][cIndex]
+    if (mines === 0) {
+      for (let i = Math.max(rIndex - 1, 0); i < Math.min(rIndex + 2, row); i++) {
+        for (let j = Math.max(cIndex - 1, 0); j < Math.min(cIndex + 2, col); j++) {
+          mines += binaryMatrix[i][j]
         }
       }
     } else {
@@ -126,58 +117,50 @@ class App extends Component {
   }
 
   reset () {
-    let {ingame,cells,gameover} = this.state
+    let {ingame, cells, gameover} = this.state
     cells.forEach(row => {
       row.forEach(cell => {
         cell.status = "close"
       })
     })
-    // console.log(cells)
+
     ingame = false
     gameover = false
-    this.setState({ingame,cells,gameover})
-    // console.log(this.state.cells)
+    this.setState({ingame, cells, gameover})
   }
 
   openCell(cellpos) {
-      let {ingame,row,col,cells} = this.state
+      let {ingame, row, col, cells} = this.state
       if (!ingame) {
           this.setState({
               ingame: !ingame
           })
       }
-      // console.log(cellpos)
-      while(cellpos.length>0) {
-          let [r,c] = cellpos[0]
-          // console.log([r,c])
+
+      while(cellpos.length > 0) {
+          let [r, c] = cellpos[0]
           cellpos.shift()
           cells[r][c].status = "open"
+
           if (cells[r][c].value<0) {
             this.openMines()
             return null
           }
-          if (cells[r][c].value===0) {
-              for (let i=r-1; i<r+2; i++) {
-                  for (let j=c-1; j<c+2; j++) {
-                      // console.log([i,j])
-                      if (
-                          (i>=0) && (j>=0) &&
-                          (i<row) && (j<col) &&
-                          !((i===r) && (j===c))
-                      ) {
-                          // console.log("Around")
-                          if (
-                              cells[i][j]
-                              .status==="close"
-                          ) {
-                              // console.log("Push")
-                              cellpos.push([i,j])
-                          }
-                      }
+
+          if (cells[r][c].value === 0) {
+              for (let i = Math.max(r-1, 0); i < Math.min(r+2, row); i++) {
+                  for (let j = Math.max(c-1, 0); j < Math.min(c+2, col); j++) {
+                    if (
+                        cells[i][j]
+                        .status==="close"
+                    ) {
+                        cellpos.push([i,j])
+                    }
                   }
               }
           }
       }
+
       this.setState({cells})
   }
 
@@ -198,29 +181,19 @@ class App extends Component {
     let mines = cells[r][c].value
     let nflag = 0
     let cellpos = []
-    // console.log([r,c])
-    for (let i=r-1; i<r+2; i++) {
-        for (let j=c-1; j<c+2; j++) {
-            // console.log([i,j])
-            if (
-                (i>=0) && (j>=0) &&
-                (i<row) && (j<col) &&
-                !((i===r) && (j===c))
-            ) {
-                // console.log("hey")
-                if (cells[i][j].status==="flag") {
-                    nflag += 1
-                }
-                if (cells[i][j].status==="close") {
-                    cellpos.push([i,j])
-                }
-            }
+
+    for (let i = Math.max(r-1, 0); i < Math.min(r+2, row); i++) {
+        for (let j = Math.max(c-1, 0); j < Math.min(c+2, col); j++) {
+          if (cells[i][j].status === "flag") {
+            nflag += 1
+          }
+          if (cells[i][j].status === "close") {
+              cellpos.push([i,j])
+          }
         }
     }
-    // console.log(cellpos)
-    if (nflag===mines) {
-        // console.log("open cells")
-        // console.log(cellpos)
+
+    if (nflag === mines) {
         this.openCell(cellpos)
     }
   }
@@ -230,7 +203,7 @@ class App extends Component {
     cells.forEach(row => {
       row.forEach(cell => {
         if (
-          (cell.status==="close") &&
+          (cell.status === "close") &&
           (cell.value<0)
         ) {
           cell.status = "open"
@@ -247,7 +220,7 @@ class App extends Component {
   }
 
   checkCells () {
-    let {row,col,mines,cells} = this.state
+    let {row, col, mines, cells} = this.state
     let safeClose = row*col-mines
     cells.forEach(row => {
       row.forEach(cell => {
@@ -257,7 +230,7 @@ class App extends Component {
         }
       })
     })
-    if (safeClose===0) {
+    if (safeClose === 0) {
       this.setState({
         ingame: false,
         gameover: true

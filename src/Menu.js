@@ -64,7 +64,7 @@ class Menu extends Component {
     }
 
     countmines (row,col) {
-        let mines = Math.ceil(row*col*0.2)
+        let mines = Math.ceil(row * col * 0.2)
         return mines
     }
 
@@ -73,7 +73,7 @@ class Menu extends Component {
         let state = this.state
         state.row = e.target.value
         state.mines = this.countmines(
-            state.row,state.col
+            state.row, state.col
         )
         this.setState({state})
     }
@@ -83,7 +83,7 @@ class Menu extends Component {
         let state = this.state
         state.col = e.target.value
         state.mines = this.countmines(
-            state.row,state.col
+            state.row, state.col
         )
         this.setState({state})
     }
@@ -91,9 +91,7 @@ class Menu extends Component {
     changeMines (e) {
         e.preventDefault()
         let mines = e.target.value
-        this.setState({
-            mines
-        })
+        this.setState({ mines })
     }
 
     handleSubmit (e) {
@@ -101,13 +99,11 @@ class Menu extends Component {
         let row = e.target.row.value
         let col = e.target.col.value
         let mines = e.target.mines.value
-        // console.log(mines)
-        this.props.newgame({row,col,mines})
+        this.props.newgame({row, col, mines})
     }
 
     handleReset (e) {
         e.preventDefault()
-        // console.log("handleReset")
         this.props.reset()
     }
 

@@ -10,7 +10,6 @@ class Board extends Component {
             openCell,flagCell,openCells
         } = this.props
         let counter = mines
-        // console.log(ingame)
         let rows = []
         cells.forEach(rc => {
             let row = []
