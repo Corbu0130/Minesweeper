@@ -21,5 +21,23 @@
 	// "remoteUser": "root",
 
 	"runArgs": ["--name", "minesweeper"],
-	"postStartCommand": "npm start"
+	"postStartCommand": "npm start",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode-remote.remote-containers",
+				"ms-azuretools.vscode-docker",
+				"waderyan.gitblame",
+				"donjayamanne.git-extension-pack",
+				"donjayamanne.githistory",
+				"codezombiech.gitignore",
+				"eamodio.gitlens",
+				"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"PKief.material-icon-theme",
+				"esbenp.prettier-vscode",
+				"burkeholland.simple-react-snippets",
+				"infeng.vscode-react-typescript"
+			]
+		}
+	}
 }
